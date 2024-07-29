@@ -1,0 +1,191 @@
+<div class="w-1vw" [ngClass]="{ 'toggle-off': !toggle, 'toggle-on': toggle }">
+  <div class="w-full h-20 flex justify-center items-center">
+    <input
+      type="text"
+      placeholder="Search"
+      class="w-1/4 rounded-lg px-4 py-2 border-2"
+      [ngClass]="{
+        'border-dark-primary': !toggle,
+        'border-light-primary': toggle
+      }"
+      [(ngModel)]="searchValue"
+    />
+    <button
+      class="w-1/12 bg-dark-secondary rounded-lg px-4 py-2 ml-4 mr-16 border-[1px] active:text-sm duration-75"
+      [ngClass]="{
+        'hover:bg-dark-primary': !toggle,
+        'border-dark-primary':!toggle,
+        'bg-dark-secondary':!toggle,
+        'hover:text-dark-background':!toggle,
+
+        'hover:bg-light-primary': toggle,
+        'border-light-primary':toggle,
+        'bg-light-secondary':toggle,
+        'hover:text-light-background':toggle,
+
+      }"
+      (click)="onSearch()"
+    >
+      Search
+    </button>
+    <select
+      name="filter"
+      id="filter"
+      class="w-1/4 rounded-lg px-4 py-2 border-2"
+      [ngClass]="{
+        'border-dark-primary': !toggle,
+        'border-light-primary': toggle
+      }"
+      [(ngModel)]="filterValue"
+      (change)="onFilter()"
+    >
+      <option disabled selected hidden value="">Add Filter</option>
+      <option value="Running">Running</option>
+      <option value="Cycling">Cycling</option>
+      <option value="Swimming">Swimming</option>
+      <option value="Yoga">Yoga</option>
+    </select>
+    <button
+      class="w-1/12 bg-dark-secondary rounded-lg px-4 py-2 ml-4 ml-32 border-[1px] active:text-sm duration-75"
+      [ngClass]="{
+        'hover:bg-dark-primary': !toggle,
+        'border-dark-primary':!toggle,
+        'bg-dark-secondary':!toggle,
+        'hover:text-dark-background':!toggle,
+
+        'hover:bg-light-primary': toggle,
+        'border-light-primary':toggle,
+        'bg-light-secondary':toggle,
+        'hover:text-light-background':toggle,
+
+      }"
+      (click)="onRefresh()"
+    >
+      Refresh
+    </button>
+  </div>
+  <div class="w-full h-screen">
+    <p *ngIf="errorMsg" class="w-5/6 text-center font-bold m-auto my-6">
+      {{ errorMsg }}
+    </p>
+    <table
+      class="w-5/6 m-auto grid shadow-md"
+      [ngClass]="{
+        'shadow-dark-secondary': !toggle,
+        'shadow-light-secondary': toggle
+      }"
+      *ngIf="data | async as workoutData"
+    >
+      <thead class="">
+        <tr
+          class="grid grid-cols-[1fr,1fr,1fr,1fr] justify-items-start px-4 py-8"
+          [ngClass]="{
+            'shadow-dark-secondary': !toggle,
+            'bg-dark-secondary': !toggle,
+            'shadow-light-secondary': toggle,
+            'bg-light-secondary': toggle,
+          }"
+        >
+          <th>Name</th>
+          <th>Workouts</th>
+          <th>Number of Workouts</th>
+          <th>Total Workout Minutes</th>
+        </tr>
+      </thead>
+      <tbody class="grid">
+        <tr
+          class="grid grid-cols-[1fr,1fr,1fr,1fr] gap-4 justify-items-start px-4 py-2 shadow-sm"
+          [ngClass]="{
+            'shadow-dark-secondary': !toggle,
+            'shadow-light-secondary': toggle
+          }"
+          *ngFor="let element of workoutData"
+        >
+          <td class="">{{ element.name }}</td>
+
+          <td class="break-all">
+            {{ element.workouts | workoutString }}
+          </td>
+
+          <td>{{ element.workouts.length }}</td>
+          <td>{{ element.total_minutes }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="w-5/6 m-auto my-6 flex justify-center items-center gap-4">
+      <button
+        (click)="onPrev()"
+        class="w-1/12 rounded-lg p-1 px-2 border-[1px] active:text-sm duration-75"
+        [ngClass]="{
+          'hover:bg-dark-primary': !toggle,
+          'border-dark-primary':!toggle,
+          'bg-dark-secondary':!toggle,
+          'hover:text-dark-background':!toggle,
+
+          'hover:bg-light-primary': toggle,
+          'border-light-primary':toggle,
+          'bg-light-secondary':toggle,
+          'hover:text-light-background':toggle,
+
+        }"
+      >
+        Previous
+      </button>
+      <button
+        (click)="onClickPage(p)"
+        *ngFor="let p of pagesArray"
+        class="rounded-lg p-1 px-2 border-[1px] active:text-sm duration-75"
+        [ngClass]="{
+          'hover:bg-dark-primary': !toggle,
+          'border-dark-primary':!toggle,
+          'bg-dark-secondary':!toggle,
+          'hover:text-dark-background':!toggle,
+
+          'hover:bg-light-primary': toggle,
+          'border-light-primary':toggle,
+          'bg-light-secondary':toggle,
+          'hover:text-light-background':toggle,
+
+        }"
+      >
+        {{ p }}
+      </button>
+
+      <button
+        (click)="onNext()"
+        class="w-1/12 rounded-lg p-1 border-[1px] active:text-sm duration-75"
+        [ngClass]="{
+          'hover:bg-dark-primary': !toggle,
+          'border-dark-primary':!toggle,
+          'bg-dark-secondary':!toggle,
+          'hover:text-dark-background':!toggle,
+
+          'hover:bg-light-primary': toggle,
+          'border-light-primary':toggle,
+          'bg-light-secondary':toggle,
+          'hover:text-light-background':toggle,
+
+        }"
+      >
+        Next
+      </button>
+      <select
+        name="page"
+        id="page"
+        class="mx-8 rounded-md p-1 border-2"
+        [(ngModel)]="perPage"
+        (change)="onPage()"
+        [ngClass]="{
+          'border-dark-primary': !toggle,
+          'border-light-primary': toggle
+        }"
+      >
+        <option value="5">5</option>
+        <option value="10" [disabled]="disable">10</option>
+      </select>
+    </div>
+    <p class="w-5/6 m-auto text-center">
+      Page {{ page }} of {{ pagesArray.length }}
+    </p>
+  </div>
+</div>

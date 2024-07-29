@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+body {
+  @apply font-sans; /* Applies the Raleway font by default */
+}
+.toggle-off {
+  @apply bg-dark-background;
+  @apply text-dark-text;
+}
+.toggle-on {
+  @apply bg-light-background;
+  @apply text-light-text;
+}
