@@ -20,6 +20,7 @@ import { WorkoutService } from './services/workout.service';
 export class AppComponent implements OnInit {
   title = 'Health-Tracker';
   toggle: boolean = false;
+  mode: string = 'Light';
 
   constructor(private router: Router, private service: WorkoutService) {}
   ngOnInit(): void {
@@ -33,6 +34,11 @@ export class AppComponent implements OnInit {
   }
   onSwitchMode() {
     this.service.updateToggle(!this.toggle);
+    if (this.toggle === true) {
+      this.mode = 'Light';
+    } else {
+      this.mode = 'Dark';
+    }
     this.toggle = !this.toggle;
   }
 }

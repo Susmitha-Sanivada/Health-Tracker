@@ -24,6 +24,7 @@ export class AddWorkoutComponent implements OnInit, OnDestroy {
   totalMinutes!: number;
   errMsg: string = '';
   filterValue: string = '';
+
   ngOnInit(): void {
     this.toggleSubscription = this.service.toggle$.subscribe((data) => {
       this.toggle = data;
