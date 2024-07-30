@@ -19,7 +19,7 @@ export class AddWorkoutComponent implements OnInit, OnDestroy {
   toggle!: boolean;
   toggleSubscription!: Subscription;
   data: any;
-  payloadData!: payloadData;
+  payloadData!: payloadData | null;
   workoutsData: workout[] | [] = [];
   totalMinutes!: number;
   errMsg: string = '';
@@ -67,6 +67,7 @@ export class AddWorkoutComponent implements OnInit, OnDestroy {
       // restting the form values to the default values
       form.reset();
       this.filterValue = '';
+      this.payloadData = null;
     } else {
       this.errMsg = 'Please fill out every input field';
     }

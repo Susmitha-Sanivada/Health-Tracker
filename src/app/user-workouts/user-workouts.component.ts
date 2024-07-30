@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { selectData } from '../store/selectors';
-import { data, payloadData, userData, workout } from '../model';
-import { Observable, filter } from 'rxjs';
+import { data } from '../model';
+import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { WorkoutService } from '../services/workout.service';
 import { WorkoutStringPipe } from '../pipes/workout.pipe';
@@ -27,7 +27,6 @@ export class UserWorkoutsComponent implements OnInit, OnDestroy {
   pagesArray!: number[];
   perPage!: number;
   page: number = 1;
-  disable: boolean = false;
   searchTrue: boolean = false;
 
   constructor(private store: Store, private service: WorkoutService) {}
@@ -46,6 +45,60 @@ export class UserWorkoutsComponent implements OnInit, OnDestroy {
   //
   //
 
+  //
+  //
+
+  onFilter() {
+    this.page = 1;
+
+    this.findFilterData(this.filterValue, this.data, this.storedData);
+  }
+  //
+  //
+  onRefresh() {
+    //  setting all the default values again
+    this.setDefault();
+  }
+  //
+  //
+
+  onSetPage() {
+    this.page = 1;
+    // on clicking a page option load the data of the first page
+    if (this.filterValue.length) {
+      this.findFilterData(this.filterValue, this.data, this.storedData);
+    } else if (!this.searchTrue) {
+      this.loadPagesArray(this.storedData);
+      this.loadViewData(this.storedData);
+    }
+  }
+  //
+  //
+
+  onClickPage(page: number) {
+    // set the page to the clicked page
+    this.page = page;
+    if (this.filterValue.length) {
+      this.findFilterData(this.filterValue, this.data, this.storedData);
+    } else if (!this.searchTrue) {
+      // no need of changing the pages array
+      this.loadViewData(this.storedData);
+    }
+  }
+  //
+  //
+
+  onPrev() {
+    this.onPageChange('onPrev');
+  }
+  //
+  //
+  onNext() {
+    this.onPageChange('onNext');
+  }
+
+  //
+  //
   onSearch() {
     // set the default values
     this.setDefault();
@@ -60,96 +113,44 @@ export class UserWorkoutsComponent implements OnInit, OnDestroy {
     // set default
     this.searchValue = '';
   }
-  //
-  //
-
-  onFilter() {
-    // use the filterbyworkout method in service to filter the data
-    this.data = this.service.filterByWorkout(this.filterValue, this.storedData);
-
-    const errorStr =
-      'No data which matches the filter value, try a different one!!!';
-    // error handling if there is no data of the filter value
-    this.toogleData(this.data, this.storedData, errorStr);
-  }
-  //
-  //
-  onRefresh() {
-    //  setting all the default values again
-    this.setDefault();
-  }
-  //
-  //
-
-  onPage() {
-    // set the default filter value to ""
-    this.filterValue = '';
-    this.page = 1;
-    // on clicking a page option load the data of the first page
-    this.loadData(this.storedData);
-  }
-  //
-  //
-
-  onClickPage(page: number) {
-    // set the page to the clicked page
-    this.page = page;
-    // console.log(this.page, this.pagesArray, this.filterValue);
-
-    if (this.searchTrue) {
-      this.loadData(this.data);
-    } else {
-      this.loadData(this.storedData);
-    }
-    // console.log(this.page, this.pagesArray, this.filterValue);
-  }
-  //
-  //
-
-  onPrev() {
-    if (this.pagesArray.length > 1 && this.page > 1) {
-      this.page = this.page - 1;
-      this.loadData(this.storedData);
-    }
-  }
-  //
-  //
-  onNext() {
-    if (this.pagesArray.length > 1 && this.page < this.pagesArray.length) {
-      this.page = this.page + 1;
-      this.loadData(this.storedData);
-    }
-  }
 
   //
   //
   // setting the defaultvalues and loading the default data
 
   setDefault() {
-    this.disable = false;
     this.filterValue = '';
     this.searchTrue = false;
     this.perPage = 5;
     this.page = 1;
     this.errorMsg = '';
     // store the data in two properties one changes and one is the default value
+
+    // at this time both the datas are same
+
+    // change the this.data whenever required and store the whole data in the this.storeddata property
     this.storedData = this.store.select(selectData);
     this.data = this.storedData;
-    this.loadData(this.data);
+    this.loadPagesArray(this.storedData);
+    this.loadViewData(this.storedData);
   }
   //
   //
 
   //
   // load the data from the service using pagination
-  loadData(currentData: Observable<data>) {
-    this.service
-      .pagination(currentData, this.perPage)
-      .subscribe((data) => (this.pagesArray = data));
 
-    this.data = this.service.loadPageData(currentData, this.page, this.perPage);
-  }
   //
+
+  loadPagesArray(loadedData: Observable<data>) {
+    this.service
+      .pagination(loadedData, this.perPage)
+      .subscribe((data) => (this.pagesArray = data));
+  }
+
+  loadViewData(loadedData: Observable<data>) {
+    this.data = this.service.loadPageData(loadedData, this.page, this.perPage);
+  }
 
   //
   //
@@ -162,17 +163,56 @@ export class UserWorkoutsComponent implements OnInit, OnDestroy {
     currentData.subscribe((data) => {
       if (data.length === 0) {
         // this.setDefault();
-        this.loadData(defaultData);
+        this.loadPagesArray(defaultData);
+        this.loadViewData(defaultData);
         this.errorMsg = errorStr;
         this.filterValue = '';
+        this.page = 1;
         this.searchTrue = false;
       } else {
         this.errorMsg = '';
         this.searchTrue = true;
-        this.loadData(currentData);
-        this.disable = true;
+        this.loadPagesArray(currentData);
+        this.loadViewData(currentData);
       }
     });
+  }
+
+  findFilterData(
+    filterVal: string,
+    currentData: Observable<data>,
+    defaultData: Observable<data>
+  ) {
+    // use the filterbyworkout method in service to filter the data
+    currentData = this.service.filterByWorkout(filterVal, defaultData);
+    const errorStr =
+      'No data which matches the filter value, try a different one!!!';
+    // error handling if there is no data of the filter value
+    this.toogleData(currentData, defaultData, errorStr);
+  }
+
+  onPageChange(pageChange: string) {
+    if (pageChange === 'onNext') {
+      if (this.pagesArray.length > 1 && this.page < this.pagesArray.length) {
+        if (!this.searchTrue) {
+          this.page = this.page + 1;
+          this.loadViewData(this.storedData);
+        } else if (this.filterValue) {
+          this.page = this.page + 1;
+          this.findFilterData(this.filterValue, this.data, this.storedData);
+        }
+      }
+    } else if (pageChange === 'onPrev') {
+      if (this.pagesArray.length > 1 && this.page > 1) {
+        if (!this.searchTrue) {
+          this.page = this.page - 1;
+          this.loadViewData(this.storedData);
+        } else if (this.filterValue) {
+          this.page = this.page - 1;
+          this.findFilterData(this.filterValue, this.data, this.storedData);
+        }
+      }
+    }
   }
 
   ngOnDestroy(): void {

@@ -9,6 +9,6 @@ export const initialState: data = initialData;
 export const addWorkoutReducer = createReducer(
   initialState,
   on(addWorkout, (state, { payload }) => {
-    return [...state, { id: state.length + 1, ...payload }];
+    return [{ id: state.length + 1, ...payload }, ...state];
   })
 );

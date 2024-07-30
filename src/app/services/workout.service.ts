@@ -54,20 +54,21 @@ export class WorkoutService {
     );
   }
 
+  // whenever new data set is loaded then call this pagination to create the final pages array for the loaded dataset
   // creates the pages array
   pagination(data: Observable<data>, perPage: number) {
     return data.pipe(
       map((data) => Math.ceil(data.length / perPage)),
-      map((numberOfPages) =>
-        Array.from({ length: numberOfPages }, (_, i) => i + 1)
-      )
+      map((numberOfPages) => {
+        return Array.from({ length: numberOfPages }, (_, i) => i + 1);
+      })
     );
   }
 
+  // whenever the page changes call this to change the data set which is viewed
   //  creates the data of the clicked page according the pages array
   loadPageData(data: Observable<data>, page: number, perPage: number) {
     return data.pipe(
-      map((data) => data),
       map((array) => {
         return array.slice((page - 1) * perPage, perPage * page);
       })

@@ -24,7 +24,8 @@
       class="w-2/3 rounded-lg px-4 py-2 border-2"
       [ngClass]="{
         'border-dark-primary': !toggle,
-        'border-light-primary': toggle
+        'border-light-primary': toggle,
+        'text-dark-background': !toggle
       }"
     />
     <label for="workouts" class="text-left w-2/3">Workouts</label>
@@ -35,7 +36,8 @@
       class="w-2/3 rounded-lg px-4 py-2 border-2"
       [ngClass]="{
         'border-dark-primary': !toggle,
-        'border-light-primary': toggle
+        'border-light-primary': toggle,
+        'text-dark-background': !toggle
       }"
       ngModel
       [(ngModel)]="filterValue"
@@ -57,7 +59,8 @@
       class="w-2/3 rounded-lg px-4 py-2 border-2"
       [ngClass]="{
         'border-dark-primary': !toggle,
-        'border-light-primary': toggle
+        'border-light-primary': toggle,
+        'text-dark-background': !toggle
       }"
     />
     <div class="w-2/3 flex justify-around items-center">

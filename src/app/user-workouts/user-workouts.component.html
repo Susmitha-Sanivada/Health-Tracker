@@ -6,7 +6,8 @@
       class="w-1/4 rounded-lg px-4 py-2 border-2"
       [ngClass]="{
         'border-dark-primary': !toggle,
-        'border-light-primary': toggle
+        'border-light-primary': toggle,
+        'text-dark-background': !toggle
       }"
       [(ngModel)]="searchValue"
     />
@@ -34,7 +35,8 @@
       class="w-1/4 rounded-lg px-4 py-2 border-2"
       [ngClass]="{
         'border-dark-primary': !toggle,
-        'border-light-primary': toggle
+        'border-light-primary': toggle,
+        'text-dark-background': !toggle
       }"
       [(ngModel)]="filterValue"
       (change)="onFilter()"
@@ -64,7 +66,7 @@
       Refresh
     </button>
   </div>
-  <div class="w-full h-screen">
+  <div class="w-full min-h-screen max-h-auto">
     <p *ngIf="errorMsg" class="w-5/6 text-center font-bold m-auto my-6">
       {{ errorMsg }}
     </p>
@@ -174,14 +176,15 @@
         id="page"
         class="mx-8 rounded-md p-1 border-2"
         [(ngModel)]="perPage"
-        (change)="onPage()"
+        (change)="onSetPage()"
         [ngClass]="{
           'border-dark-primary': !toggle,
-          'border-light-primary': toggle
+          'border-light-primary': toggle,
+          'text-dark-background': !toggle
         }"
       >
         <option value="5">5</option>
-        <option value="10" [disabled]="disable">10</option>
+        <option value="10">10</option>
       </select>
     </div>
     <p class="w-5/6 m-auto text-center">
