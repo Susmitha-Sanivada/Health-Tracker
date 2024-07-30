@@ -2,23 +2,25 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.3.
 
-## Development server
+# Deployed Site Link (After fixing minor bugs)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+https://health-tracker88.netlify.app
 
-## Running unit tests
+# Fixed Bugs
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1. Fixed the filter functionality which isn't working correctly. (commit message - "Fixed Bugs")
+2. Added the Light and Dark mode on top right in place of switchmode.(commit message - "Added light and dark mode")
+3. Updated ReadMe file with the necessary commits and information.(commit message - "Updated ReadMe")
 
-**Project Highlights**
+# Project Highlights
 
 1. NgRx is used for state management.
-2. Unit Tests for app component, a service and a pipe are written with 100% code coverage.
+2. Unit Tests for app component, a service and a pipe are written with 100% code coverage. Total of 22 unit tests are written.
 3. Switch mode functionality is implemented where we can switch from dark mode to light mode and vice versa.
 4. Refresh functionality is implemented to refresh the data to the default data after searching for a value or filtering the results.
 5. A single page application with two routes and two components.
 
-**Genreal**
+# General
 
 1. To add more than one workout of the same username , click on the add more button.
 2. Add button changes the app state and the change can be seen in the user_workoutes tab.
@@ -30,3 +32,11 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
    i.e..Page 1 of 2
 8. The assignment has been done in the Angular 14+ framework.
 9. Styling is done with Tailwind.
+
+## Development server
+
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
